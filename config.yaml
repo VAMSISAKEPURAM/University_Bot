@@ -1,0 +1,16 @@
+app:
+  name: "Local RAG Chatbot"
+
+chunking:
+  chunk_size: 500
+  chunk_overlap: 50
+
+embeddings:
+  model_name: "sentence-transformers/all-MiniLM-L6-v2"   # Free local HuggingFace model (unchanged)
+
+vectordb:
+  persist_directory: "faiss_index"   # FAISS index folder
+
+llm:
+  provider: "groq"                          # Groq Inference API
+  model_name: "llama-3.1-8b-instant"       # LLaMA 3.1 8B via Groq
