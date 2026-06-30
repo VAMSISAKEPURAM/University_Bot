@@ -1,6 +1,6 @@
 """
 LLM client using Groq Inference API.
-Reads the API key from the GROQ_API_KEY environment variable in .env.
+Reads the API key from Streamlit secrets (preferred) or GROQ_API_KEY env variable.
 
 Model: llama-3.1-8b-instant (fast, free-tier friendly on Groq)
 Embeddings: sentence-transformers/all-MiniLM-L6-v2 (HuggingFace, unchanged)
@@ -13,18 +13,39 @@ from dotenv import load_dotenv
 load_dotenv()
 
 
+def _get_groq_api_key() -> str:
+    """
+    Resolve the Groq API key with the following priority:
+    1. Streamlit secrets  (st.secrets["GROQ_API_KEY"])  — used on Streamlit Cloud
+    2. Environment variable / .env file                  — used in local development
+    """
+    # Try Streamlit secrets first (available when running via `streamlit run`)
+    try:
+        import streamlit as st
+        key = st.secrets.get("GROQ_API_KEY", "")
+        if key:
+            return key
+    except Exception:
+        pass  # Not running inside Streamlit, fall through
+
+    # Fall back to environment variable / .env
+    key = os.getenv("GROQ_API_KEY", "")
+    return key
+
+
 class GroqLLMClient:
     """
     Wraps the Groq Inference API for chat-based text generation.
-    Uses the key stored in .env under GROQ_API_KEY.
+    Reads GROQ_API_KEY from Streamlit secrets first, then from .env / environment.
     """
 
     def __init__(self, model_name: str = "llama-3.1-8b-instant"):
-        api_key = os.getenv("GROQ_API_KEY")
+        api_key = _get_groq_api_key()
         if not api_key:
             raise ValueError(
-                "GROQ_API_KEY not found in environment. "
-                "Please add it to your .env file:\n  GROQ_API_KEY=gsk_..."
+                "GROQ_API_KEY not found. "
+                "Add it to Streamlit secrets (GROQ_API_KEY = '...') "
+                "or to your .env file (GROQ_API_KEY=gsk_...)."
             )
         self.client = Groq(api_key=api_key)
         self.model_name = model_name
