@@ -1,0 +1,30 @@
+# PDF loading
+pypdf>=4.0.1
+
+# Text splitting
+langchain-text-splitters>=0.2.0
+
+# Embeddings (local, free — sentence-transformers/all-MiniLM-L6-v2)
+sentence-transformers>=2.2.2
+langchain-huggingface>=0.0.3
+
+# Vector store (FAISS)
+faiss-cpu>=1.7.4
+
+# LangChain community integrations (PyPDFLoader, FAISS wrapper)
+langchain-community>=0.0.38
+
+# LLM via Groq Inference API (replaces huggingface_hub LLM)
+groq>=0.9.0
+
+# API server
+fastapi>=0.104.1
+uvicorn>=0.24.0
+pydantic>=2.0.0
+
+# Config & environment
+python-dotenv>=1.0.0
+pyyaml>=6.0.1
+
+# Streamlit UI
+streamlit>=1.35.0
